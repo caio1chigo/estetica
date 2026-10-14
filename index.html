@@ -15,13 +15,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap"
-    rel="stylesheet"
-  >
-
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+  <div class="loader" id="loader" role="status" aria-live="polite">
+  <div class="loader-inner">
+    <p class="loader-eyebrow">Harmonização orofacial</p>
+    <h1 class="loader-name">
+      <span>Dra. Caroline</span>
+      <strong>Messias</strong>
+    </h1>
+    <div class="loader-line" aria-hidden="true">
+      <i></i>
+    </div>
+    <p class="loader-sr">Carregando página</p>
+  </div>
+</div>
   <header class="site-header" id="inicio">
     <a class="brand" href="#inicio" aria-label="Voltar ao início">
       <span>Dra. Caroline</span>
@@ -63,7 +73,7 @@
 
   <main>
     <section class="hero">
-      <div class="hero-copy">
+      <div class="hero-copy reveal reveal-left">
         <p class="eyebrow">Cirurgiã-dentista · Harmonização orofacial</p>
 
         <h1>
@@ -96,7 +106,7 @@
         </ul>
       </div>
 
-      <div class="hero-image-wrap">
+      <div class="hero-image-wrap reveal reveal-right">
         <div class="hero-image gold-frame">
           <img
             src="src/caroline-hero.png"
@@ -111,29 +121,29 @@
     </section>
 
     <section class="trust-strip" aria-label="Princípios de atendimento">
-      <article>
+      <article class="reveal reveal-up" style="--delay: 0s">
         <span>01</span>
         <p>Escuta e avaliação individual</p>
       </article>
 
-      <article>
+      <article class="reveal reveal-up" style="--delay: 0.1s">
         <span>02</span>
         <p>Planejamento com intenção</p>
       </article>
 
-      <article>
+      <article class="reveal reveal-up" style="--delay: 0.2s">
         <span>03</span>
         <p>Resultados que preservam sua expressão</p>
       </article>
 
-      <article>
+      <article class="reveal reveal-up" style="--delay: 0.3s">
         <span>04</span>
         <p>Orientação antes e depois do atendimento</p>
       </article>
     </section>
 
     <section class="procedures section" id="procedimentos">
-      <div class="section-heading">
+      <div class="section-heading reveal reveal-down">
         <p class="eyebrow">Procedimentos</p>
 
         <div>
@@ -147,7 +157,7 @@
       </div>
 
       <div class="procedure-grid">
-        <article class="procedure-card">
+        <article class="procedure-card reveal reveal-up" style="--delay: 0s">
           <span class="procedure-index">01</span>
           <h3>Perfil</h3>
           <img class="procedure-image" src="src/perfil.jpg" alt="Procedimento de harmonização de perfil"/>
@@ -158,7 +168,7 @@
           <a href="#contato">Saiba mais <span aria-hidden="true">→</span></a>
         </article>
 
-        <article class="procedure-card">
+        <article class="procedure-card reveal reveal-up" style="--delay: 0.1s">
           <span class="procedure-index">02</span>
           <h3>Olheiras</h3>
           <img class="procedure-image" src="src/olheiras.jpg" alt="Procedimento de tratamento de olheiras"/>
@@ -169,7 +179,7 @@
           <a href="#contato">Saiba mais <span aria-hidden="true">→</span></a>
         </article>
 
-        <article class="procedure-card">
+        <article class="procedure-card reveal reveal-up" style="--delay: 0.2s">
           <span class="procedure-index">03</span>
           <h3>Rinomodelação</h3>
           <img class="procedure-image" src="src/rinomodelacao.jpg" alt="Procedimento de rinomodelação"/>
@@ -180,7 +190,7 @@
           <a href="#contato">Saiba mais <span aria-hidden="true">→</span></a>
         </article>
 
-        <article class="procedure-card">
+        <article class="procedure-card reveal reveal-up" style="--delay: 0.3s">
           <span class="procedure-index">04</span>
           <h3>Lábios</h3>
             <img class="procedure-image" src="src/labios.jpg" alt="Procedimento de preenchimento labial"/>
@@ -191,7 +201,7 @@
           <a href="#contato">Saiba mais <span aria-hidden="true">→</span></a>
         </article>
 
-        <article class="procedure-card procedure-card-featured">
+        <article class="procedure-card procedure-card-featured reveal reveal-up" style="--delay: 0.4s">
           <span class="procedure-index">05</span>
           <h3>Harmonização orofacial</h3>
             <img class="procedure-image" src="src/harmonizacao.jpg" alt="Procedimento de harmonização orofacial"/>
@@ -205,7 +215,7 @@
     </section>
 
     <section class="about section" id="sobre">
-      <div class="about-image gold-frame">
+      <div class="about-image gold-frame reveal reveal-left">
         <img
           src="src/caroline-hero.png"
           alt=""
@@ -213,7 +223,7 @@
         >
       </div>
 
-      <div class="about-copy">
+      <div class="about-copy reveal reveal-right">
         <p class="eyebrow">Sobre a Dra. Caroline</p>
 
         <h2>
@@ -290,7 +300,7 @@
     </section>
 
     <section class="results section">
-      <div class="results-heading">
+      <div class="results-heading reveal reveal-down">
         <p class="eyebrow">Cada rosto tem uma história</p>
 
         <h2>
@@ -304,14 +314,48 @@
         </p>
       </div>
 
-      <div class="results-placeholder">
-        <span>Área reservada para resultados autorizados</span>
-        <small>Estudo conceitual — não utilizar imagens de pacientes sem autorização.</small>
-      </div>
+      <div class="results-grid">
+  <figure class="result-card gold-frame reveal reveal-up"
+          style="--delay: 0s">
+    <img
+      src="src/resultado-1.jpg"
+      alt="Comparação do diagnóstico inicial e resultado do caso 1"
+      loading="lazy">
+    <figcaption>Caso 01</figcaption>
+  </figure>
+  <figure class="result-card gold-frame reveal reveal-up"
+          style="--delay: 0.1s">
+    <img
+      src="src/resultado-2.jpg"
+      alt="Comparação do diagnóstico inicial e resultado do caso 2"
+      loading="lazy">
+    <figcaption>Caso 02</figcaption>
+  </figure>
+  <figure class="result-card gold-frame reveal reveal-up"
+          style="--delay: 0.2s">
+    <img
+      src="src/resultado-3.jpg"
+      alt="Comparação do diagnóstico inicial e resultado do caso 3"
+      loading="lazy">
+    <figcaption>Caso 03</figcaption>
+  </figure>
+  <figure class="result-card gold-frame reveal reveal-up"
+          style="--delay: 0.3s">
+    <img
+      src="src/resultado-4.jpg"
+      alt="Comparação do diagnóstico inicial e resultado do caso 4"
+      loading="lazy">
+    <figcaption>Caso 04</figcaption>
+  </figure>
+</div>
+<p class="results-note">
+  Cada caso possui indicação e evolução individuais.
+  As imagens não representam garantia de resultado.
+</p>
     </section>
 
     <section class="faq-contact section" id="duvidas">
-      <div class="faq">
+      <div class="faq reveal reveal-left">
         <p class="eyebrow">Dúvidas frequentes</p>
         <h2>Antes de começar, <em>vamos conversar.</em></h2>
 
@@ -348,7 +392,7 @@
         </details>
       </div>
 
-      <div class="contact-card gold-frame" id="contato">
+      <div class="contact-card gold-frame reveal reveal-right" id="contato">
         <p class="eyebrow">Agende sua avaliação</p>
 
         <h2>
@@ -426,9 +470,14 @@
     aria-label="Ir para agendamento"
   >
     Agendar
-    <span aria-hidden="true">↗</span>
+    <span aria-hidden="true">→</span>
   </a>
-
+ <button
+  class="back-to-top"
+  id="back-to-top"
+  type="button"
+  aria-label="Voltar ao topo"
+>↑</button>
   <script src="script.js"></script>
 </body>
 </html>
