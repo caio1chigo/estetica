@@ -1,82 +1,83 @@
-(() => {
-'use strict';
-// CONFIGURE AQUI: código do país + DDD + número, apenas dígitos.
-const WHATSAPP = '';
-const INITIAL_MESSAGE = 'Olá! Gostaria de agendar uma avaliação com a Dra. Stefany Gomes.';
-const SERVICES = [["Harmonização facial", "Planejamento individual", "Um espaço para apresentar a proposta de harmonização facial da profissional. Confirmar descrição e indicação na revisão do conteúdo."], ["Preenchimento labial", "Proporções e expressão", "Descrição do tratamento a ser validada pela profissional antes da publicação."], ["Toxina botulínica", "Avaliação personalizada", "Descrição do tratamento a ser validada pela profissional antes da publicação."], ["Bioestimuladores", "Plano de cuidado", "Descrição do tratamento a ser validada pela profissional antes da publicação."], ["Contorno facial", "Atenção aos detalhes", "Descrição do tratamento a ser validada pela profissional antes da publicação."], ["Cuidados com a pele", "Acompanhamento individual", "Descrição do tratamento a ser validada pela profissional antes da publicação."]];
-const $ = s => document.querySelector(s);
-const $$ = s => [...document.querySelectorAll(s)];
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const configured = /^\d{10,15}$/.test(WHATSAPP);
-const whatsapp = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+const loader = document.querySelector("#loader");
+const loaderStart = performance.now();
+const MIN_LOADER_TIME = 1400;
+let loaderDone = false;
 
-function reveal() {
- const els = $$('.reveal');
- if (reduce || !('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('in')); return; }
- const observer = new IntersectionObserver(entries => entries.forEach(entry => {
-  if (entry.isIntersecting) { entry.target.classList.add('in'); observer.unobserve(entry.target); }
- }), {threshold: .08});
- els.forEach(el => observer.observe(el));
-}
-// Contador visual de apresentação; não é progresso real de download.
-const loader = $('#loader');
-function finishLoader() {
- if (!loader || loader.classList.contains('done')) return;
- loader.classList.add('done'); setTimeout(() => loader.remove(), 650); reveal();
-}
-if (reduce) { loader?.remove(); reveal(); }
-else {
- const start = performance.now();
- function step(now) {
-  if (!loader || loader.classList.contains('done')) return;
-  const p = Math.min((now-start)/1400,1), eased = 1-Math.pow(1-p,3);
-  $('#loader-fill').style.transform = `scaleX(${eased})`;
-  $('#loader-count').textContent = Math.round(eased*100)+'%';
-  if(p<1) requestAnimationFrame(step); else setTimeout(finishLoader,180);
- }
- requestAnimationFrame(step); setTimeout(finishLoader,3500);
+document.body.classList.add("is-loading");
+
+function startReveal() {
+  const items = document.querySelectorAll(".reveal");
+
+  if (!("IntersectionObserver" in window)) {
+    items.forEach((item) => item.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        obs.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
+  );
+
+  items.forEach((item) => observer.observe(item));
 }
 
-const toggle = $('.menu-toggle'), menu = $('#navigation');
-function setMenu(open) { menu.classList.toggle('open',open); toggle.setAttribute('aria-expanded',String(open)); toggle.setAttribute('aria-label',open?'Fechar menu':'Abrir menu'); }
-toggle.addEventListener('click',()=>setMenu(toggle.getAttribute('aria-expanded')!=='true'));
-menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
-addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
-addEventListener('resize',()=>{if(innerWidth>680)setMenu(false)});
+function hideLoader() {
+  if (loaderDone) return;
+  loaderDone = true;
 
-const topButton = $('#back-to-top');
-const updateTop = () => topButton.classList.toggle('visible',scrollY>500);
-addEventListener('scroll',updateTop,{passive:true});updateTop();
-topButton.addEventListener('click',()=>scrollTo({top:0,behavior:reduce?'instant':'smooth'}));
+  const wait = Math.max(0, MIN_LOADER_TIME - (performance.now() - loaderStart));
 
-$$('.compare').forEach(box=>{
- const input=box.querySelector('.compare-range');
- const update=()=>box.style.setProperty('--pos',input.value+'%');
- input.addEventListener('input',update);update();
+  setTimeout(() => {
+    loader?.classList.add("is-hidden");
+    document.body.classList.remove("is-loading");
+    startReveal();
+    setTimeout(() => loader?.remove(), 900);
+  }, wait);
+}
+
+if (document.readyState === "complete") {
+  hideLoader();
+} else {
+  window.addEventListener("load", hideLoader);
+}
+
+setTimeout(hideLoader, 6000);
+const CONFIG = { whatsapp: "" };
+const menuButton = document.querySelector(".menu-toggle");
+const nav = document.querySelector("#main-nav");
+function closeMenu(){nav.classList.remove("open");menuButton.setAttribute("aria-expanded","false");menuButton.setAttribute("aria-label","Abrir menu");}
+menuButton.addEventListener("click",()=>{const open=nav.classList.toggle("open");menuButton.setAttribute("aria-expanded",String(open));menuButton.setAttribute("aria-label",open?"Fechar menu":"Abrir menu");});
+nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",closeMenu));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu();});
+document.querySelectorAll("img.asset").forEach(img=>{const fail=()=>img.classList.add("missing");img.addEventListener("error",fail);if(img.complete&&!img.naturalWidth)fail();});
+const reduced=window.matchMedia("(prefers-reduced-motion: reduce)");
+const gallery=document.querySelector("#results-track");
+document.querySelectorAll("[data-gallery]").forEach(btn=>btn.addEventListener("click",()=>{gallery.scrollBy({left:Number(btn.dataset.gallery)*(gallery.querySelector(".result-card").getBoundingClientRect().width+14),behavior:reduced.matches?"instant":"smooth"});}));
+const testimonialTrack=document.querySelector("#testimonial-track");
+const dots=[...document.querySelectorAll("[data-slide]")];
+function setDot(index){dots.forEach((dot,i)=>{dot.classList.toggle("selected",i===index);dot.setAttribute("aria-pressed",String(i===index));});}
+dots.forEach(dot=>dot.addEventListener("click",()=>{if(!window.matchMedia("(max-width:620px)").matches)return;const index=Number(dot.dataset.slide);const card=testimonialTrack.children[index];testimonialTrack.scrollTo({left:card.offsetLeft-testimonialTrack.children[0].offsetLeft,behavior:reduced.matches?"instant":"smooth"});setDot(index);}));
+function updateDots(){const mobile=window.matchMedia("(max-width:620px)").matches;document.querySelector(".slider-dots").hidden=!mobile;}
+updateDots();window.addEventListener("resize",updateDots);
+testimonialTrack.addEventListener("scroll",()=>{const width=testimonialTrack.children[0].getBoundingClientRect().width+12;setDot(Math.min(2,Math.round(testimonialTrack.scrollLeft/width)));},{passive:true});
+const topButton=document.querySelector("#back-to-top");
+function updateTop(){topButton.classList.toggle("visible",window.scrollY>500);}
+updateTop();window.addEventListener("scroll",updateTop,{passive:true});
+topButton.addEventListener("click",()=>window.scrollTo({top:0,behavior:reduced.matches?"instant":"smooth"}));
+document.querySelector("#year").textContent=new Date().getFullYear();
+document.querySelector("#consultation-form").addEventListener("submit",e=>{e.preventDefault();const status=document.querySelector("#form-status");if(!/^\d{10,15}$/.test(CONFIG.whatsapp)){status.textContent="Demonstração: configure o contato autorizado em CONFIG.whatsapp, no script.js. Nenhuma informação foi enviada.";return;}const data=new FormData(e.currentTarget);const text=["Olá! Gostaria de agendar uma consulta.",`Nome: ${data.get("nome")}`,`Telefone: ${data.get("telefone")}`,`E-mail: ${data.get("email")||"Não informado"}`,`Data preferida: ${data.get("data")||"A combinar"}`,`Interesse: ${data.get("interesse")||"Avaliação inicial"}`,`Mensagem: ${data.get("mensagem")||"Não informada"}`].join("\n");window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`,"_blank","noopener,noreferrer");status.textContent="Solicitação preparada para envio no WhatsApp. O agendamento depende de confirmação.";});
+document.addEventListener("click", (event) => {
+  if (
+    nav.classList.contains("open") &&
+    !nav.contains(event.target) &&
+    !menuButton.contains(event.target)
+  ) {
+    closeMenu();
+  }
 });
-
-if(configured){
- $$('[data-whatsapp]').forEach(a=>{a.href=whatsapp(INITIAL_MESSAGE);a.target='_blank';a.rel='noopener noreferrer'});
- $('#form-status').textContent='Ao enviar, sua mensagem será aberta no WhatsApp. Não inclua dados sensíveis.';
-}
-$('#booking-form').addEventListener('submit',e=>{
- e.preventDefault();
- const status=$('#form-status');
- if(!configured){status.textContent='Demonstração: nenhum dado foi enviado ou armazenado. Configure o WhatsApp no script.js.';return;}
- const form=new FormData(e.currentTarget);
- const lines=[INITIAL_MESSAGE,'',...Array.from(form,([k,v])=>v.trim()?`${({nome:'Nome',telefone:'WhatsApp',email:'E-mail',interesse:'Interesse',mensagem:'Mensagem'})[k]}: ${v.trim()}`:'').filter(Boolean)];
- const win=window.open(whatsapp(lines.join('\n')),'_blank','noopener,noreferrer');
- status.textContent='A mensagem foi preparada para o WhatsApp. Confirme o envio no aplicativo.';
-});
-
-const dialog=$('#service-dialog');
-$$('[data-service]').forEach(btn=>btn.addEventListener('click',()=>{
- const s=SERVICES[Number(btn.dataset.service)];
- $('#dialog-title').textContent=s[0];$('#dialog-description').textContent=s[2];
- dialog.showModal();
-}));
-$('.dialog-close').addEventListener('click',()=>dialog.close());
-$('#dialog-contact').addEventListener('click',()=>dialog.close());
-dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
-$('#year').textContent=new Date().getFullYear();
-})();
